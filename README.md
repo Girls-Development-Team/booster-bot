@@ -9,6 +9,6 @@ This repo is protected by the MIT LICENCE, for further information, see the [LIC
 Thanks to all these Contributors
 
 
-<a href="https://github.com/CloveTwilight3/booster-bot/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=CloveTwilight3/booster-bot" />
+<a href="https://github.com/Girls-Development-Team/booster-bot/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Girls-Development-Team/booster-bot" />
 </a>
