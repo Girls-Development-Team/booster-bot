@@ -167,7 +167,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.editReply({ embeds: [successEmbed] });
       } else {
         const memberList = problematicMembers.map(member => 
-          `• ${member.user.tag} (${member.user.id})`
+          `• ${member.user.tag} (<@${member.user.id}>)`
         ).join('\n');
         
         const warningEmbed = new EmbedBuilder()
