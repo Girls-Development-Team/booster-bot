@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, EmbedBuilder, SlashCommandBuilder, REST, Routes, Partials } from 'discord.js';
+import { Client, GatewayIntentBits, Events, EmbedBuilder, SlashCommandBuilder, REST, Routes, Partials, GuildMember } from 'discord.js';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
@@ -132,7 +132,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.commandName === 'check') {
     // Check if user is allowed (either by user ID or role)
     const member = interaction.member;
-    const hasRole = member && typeof member !== 'string' && 'roles' in member && member.roles.cache.has(config.allowedRoleId);
+    const hasRole = member instanceof GuildMember && member.roles.cache.has(config.allowedRoleId);
     
     if (interaction.user.id !== config.allowedUserId && !hasRole) {
       await interaction.reply({ content: '❌ You do not have permission to use this command.', flags: 64 });
