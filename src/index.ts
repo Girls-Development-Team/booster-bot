@@ -13,6 +13,7 @@ const config = {
   boosterRoleId: process.env.BOOSTER_ROLE_ID!,
   targetRoleId: process.env.TARGET_ROLE_ID!, // The role to check for
   allowedUserId: '1025770042245251122', // Your user ID for /test command
+  allowedRoleId: '1435335614378676345', // Role that can use /check command
 };
 
 // Create a new client instance
@@ -83,7 +84,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.commandName === 'test') {
     // Check if user is allowed
     if (interaction.user.id !== config.allowedUserId) {
-      await interaction.reply({ content: '❌ You do not have permission to use this command.', ephemeral: true });
+      await interaction.reply({ content: '❌ You do not have permission to use this command.', flags: 64 });
       return;
     }
     
@@ -105,7 +106,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
   
   if (interaction.commandName === 'ping') {
-    const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true, ephemeral: true });
+    const sent = await interaction.reply({ content: 'Pinging...', withResponse: true, flags: 64 });
     
     const wsLatency = client.ws.ping;
     const apiLatency = sent.createdTimestamp - interaction.createdTimestamp;
@@ -128,13 +129,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
   
   if (interaction.commandName === 'check') {
-    // Check if user is allowed
-    if (interaction.user.id !== config.allowedUserId) {
-      await interaction.reply({ content: '❌ You do not have permission to use this command.', ephemeral: true });
+    // Check if user is allowed (either by user ID or role)
+    const member = interaction.member;
+    const hasRole = member && 'roles' in member && member.roles.cache.has(config.allowedRoleId);
+    
+    if (interaction.user.id !== config.allowedUserId && !hasRole) {
+      await interaction.reply({ content: '❌ You do not have permission to use this command.', flags: 64 });
       return;
     }
     
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64 });
     
     try {
       // Fetch all members in the guild
@@ -174,10 +178,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
         await interaction.editReply({ embeds: [warningEmbed] });
         
-        // Also send to admin channel
-        const adminChannel = await client.channels.fetch(config.adminChannelId);
-        if (adminChannel?.isTextBased() && 'send' in adminChannel) {
-          await adminChannel.send({ embeds: [warningEmbed] });
+        // Also send to admin channel - wrapped in try/catch to handle permission errors
+        try {
+          const adminChannel = await client.channels.fetch(config.adminChannelId);
+          if (adminChannel?.isTextBased() && 'send' in adminChannel) {
+            await adminChannel.send({ embeds: [warningEmbed] });
+          }
+        } catch (channelError) {
+          console.error('⚠️ Could not send to admin channel (check bot permissions):', channelError);
         }
       }
       
