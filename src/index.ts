@@ -106,10 +106,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
   
   if (interaction.commandName === 'ping') {
-    const sent = await interaction.reply({ content: 'Pinging...', withResponse: true, flags: 64 });
+    const startTime = Date.now();
+    await interaction.reply({ content: 'Pinging...', flags: 64 });
     
     const wsLatency = client.ws.ping;
-    const apiLatency = sent.createdTimestamp - interaction.createdTimestamp;
+    const apiLatency = Date.now() - startTime;
     const shardId = interaction.guild?.shardId ?? 0;
     
     const pingEmbed = new EmbedBuilder()
@@ -131,7 +132,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.commandName === 'check') {
     // Check if user is allowed (either by user ID or role)
     const member = interaction.member;
-    const hasRole = member && 'roles' in member && member.roles.cache.has(config.allowedRoleId);
+    const hasRole = member && typeof member !== 'string' && 'roles' in member && member.roles.cache.has(config.allowedRoleId);
     
     if (interaction.user.id !== config.allowedUserId && !hasRole) {
       await interaction.reply({ content: '❌ You do not have permission to use this command.', flags: 64 });
