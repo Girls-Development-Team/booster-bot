@@ -8,13 +8,13 @@ COPY package*.json ./
 COPY tsconfig.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install 
 
 # Copy source code
 COPY src ./src
 
 # Build TypeScript
-RUN npm run build
+RUN npm run build 
 
 # Production stage
 FROM node:25-alpine
@@ -25,7 +25,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm install --omit=dev
+RUN npm install --omit=dev && npm install -g @dotenvx/dotenvx
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
@@ -41,4 +41,4 @@ RUN chown -R nodejs:nodejs /app
 USER nodejs
 
 # Start the bot
-CMD ["node", "dist/index.js"]
+CMD ["doxenvx", "run", "--", "node", "dist/index.js"]
