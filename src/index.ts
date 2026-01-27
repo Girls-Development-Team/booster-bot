@@ -1,17 +1,13 @@
 import { Client, GatewayIntentBits, Events, EmbedBuilder, SlashCommandBuilder, REST, Routes, Partials, GuildMember } from 'discord.js';
-import * as dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
 
 // Configuration
 const config = {
-  token: process.env.DISCORD_TOKEN!,
-  clientId: process.env.CLIENT_ID!,
-  guildId: process.env.GUILD_ID!, // Your server/guild ID for instant command updates
-  adminChannelId: process.env.ADMIN_CHANNEL_ID!,
+  token: process.env.BOOSTER_TOKEN!,
+  clientId: process.env.BOOSTER_CLIENT_ID!,
+  guildId: process.env.BOOSTER_GUILD_ID!, // Your server/guild ID for instant command updates
+  adminChannelId: process.env.BOOSTER_ADMIN_CHANNEL_ID!,
   boosterRoleId: process.env.BOOSTER_ROLE_ID!,
-  targetRoleId: process.env.TARGET_ROLE_ID!, // The role to check for
+  targetRoleId: process.env.BOOSTER_TARGET_ROLE_ID!, // The role to check for
   allowedUserId: '1025770042245251122', // Your user ID for /test command
   allowedRoleId: '1435335614378676345', // Role that can use /check command
 };
