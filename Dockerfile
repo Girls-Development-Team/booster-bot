@@ -41,4 +41,4 @@ RUN chown -R nodejs:nodejs /app
 USER nodejs
 
 # Start the bot
-CMD ["dotxenvx", "run", "--", "node", "dist/index.js"]
+CMD ["dotenvx", "run", "--", "node", "dist/index.js"]
